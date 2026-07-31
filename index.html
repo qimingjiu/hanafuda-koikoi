@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<title>花札こいこい</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;900&family=Noto+Serif+SC:wght@400;600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ═══════════ 首页 ═══════════ -->
+<section id="screen-home" class="screen">
+  <div class="petals" aria-hidden="true">
+    <i></i><i></i><i></i><i></i><i></i><i></i>
+  </div>
+  <div class="home-inner">
+    <div class="home-left">
+      <div class="home-title-row">
+        <h1 class="title-v">花札<small>こいこい</small></h1>
+        <div class="hanko">こい<br>こい</div>
+      </div>
+      <p class="home-sub">万葉の趣を、掌上に。</p>
+      <p class="home-desc">四十八张花札，十二个月的花鸟风月。<br>与 AI 对弈，或与朋友同屏轮流执子。</p>
+      <nav class="home-menu">
+        <button class="menu-btn" data-go="setup-ai"><span class="menu-kanji">対人</span><span class="menu-label">与 AI 对弈</span></button>
+        <button class="menu-btn" data-go="setup-2p"><span class="menu-kanji">二人</span><span class="menu-label">双人对弈 · 同屏轮流</span></button>
+        <button class="menu-btn ghost" data-go="rules"><span class="menu-kanji">规则</span><span class="menu-label">玩法与役种</span></button>
+        <button class="menu-btn ghost" data-go="settings"><span class="menu-kanji">接続</span><span class="menu-label">AI 接口设置</span></button>
+      </nav>
+      <p class="home-note" id="home-ai-note"></p>
+    </div>
+    <div class="home-right">
+      <figure class="kakemono">
+        <img src="assets/hero.png" alt="浮世绘：鹤与花札">
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 开局设置 ═══════════ -->
+<section id="screen-setup" class="screen hidden">
+  <div class="setup-panel">
+    <h2 class="panel-title" id="setup-title">开局</h2>
+    <div class="setup-fields">
+      <label class="field">
+        <span class="field-label" id="setup-name1-label">你的名字</span>
+        <input id="setup-name1" type="text" maxlength="12" placeholder="你">
+      </label>
+      <label class="field" id="setup-name2-wrap">
+        <span class="field-label" id="setup-name2-label">AI 的名字</span>
+        <input id="setup-name2" type="text" maxlength="12" placeholder="对手">
+      </label>
+      <div class="field">
+        <span class="field-label">局数</span>
+        <div class="seg">
+          <button class="seg-btn active" data-rounds="6">六局<span class="seg-sub">短平快</span></button>
+          <button class="seg-btn" data-rounds="12">十二局<span class="seg-sub">完整一战</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="setup-actions">
+      <button class="btn primary" id="setup-start">开 局</button>
+      <button class="btn outline" id="setup-back">返 回</button>
+    </div>
+    <p class="setup-warn hidden" id="setup-ai-warn"></p>
+  </div>
+</section>
+
+<!-- ═══════════ 牌桌 ═══════════ -->
+<section id="screen-table" class="screen hidden">
+  <header class="table-head">
+    <div class="th-left">
+      <div class="round-v" id="head-round">一</div>
+      <div class="th-scores">
+        <div class="score-line me"><span class="sc-name" id="sc-name-me">你</span><b class="sc-pts" id="sc-pts-me">0</b><span class="koikoi-badge hidden" id="koikoi-me">こいこい</span></div>
+        <div class="score-line opp"><span class="sc-name" id="sc-name-opp">对手</span><b class="sc-pts" id="sc-pts-opp">0</b><span class="koikoi-badge hidden" id="koikoi-opp">こいこい</span></div>
+      </div>
+    </div>
+    <div class="th-right">
+      <span class="deck-count" id="deck-count">山札 24</span>
+      <button class="icon-btn" id="btn-log" title="牌谱">谱</button>
+      <button class="icon-btn" id="btn-rules" title="规则">则</button>
+      <button class="icon-btn" id="btn-settings" title="AI 接口">⚙</button>
+      <button class="icon-btn" id="btn-quit" title="回首页">✕</button>
+    </div>
+  </header>
+
+  <div class="ai-banner hidden" id="ai-banner"><span class="ai-banner-text" id="ai-banner-text">对手思考中</span><span class="dots"><i></i><i></i><i></i></span></div>
+
+  <main class="table-main">
+    <!-- 对手区 -->
+    <div class="zone-opp">
+      <div class="opp-hand" id="opp-hand"></div>
+      <button class="cap-chip" id="cap-chip-opp" title="查看对方拿到的牌"></button>
+    </div>
+
+    <!-- 场 -->
+    <div class="zone-field">
+      <div class="field-cloth">
+        <div class="field-grid" id="field-grid"></div>
+      </div>
+    </div>
+
+    <!-- 我方区 -->
+    <div class="zone-me">
+      <button class="cap-chip" id="cap-chip-me" title="查看我拿到的牌"></button>
+      <div class="turn-hint" id="turn-hint"></div>
+      <div class="my-hand" id="my-hand"></div>
+    </div>
+  </main>
+</section>
+
+<!-- 模态 / 幕布 / 通知 -->
+<div id="modal-root"></div>
+<div id="curtain" class="curtain hidden">
+  <div class="curtain-inner">
+    <div class="curtain-kanji">交替</div>
+    <p class="curtain-text" id="curtain-text">请把设备交给下一位玩家</p>
+    <button class="btn primary" id="curtain-go">我准备好了</button>
+  </div>
+</div>
+<div id="toast-root"></div>
+
+<script src="js/engine.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>
